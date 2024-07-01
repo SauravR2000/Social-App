@@ -1,6 +1,7 @@
 package com.example.socialnetwork.presentation.auth.login
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -15,10 +16,16 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Email
 import androidx.compose.material.icons.rounded.Password
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -35,19 +42,23 @@ import com.example.socialnetwork.components.VerticalGapMedium
 import com.example.socialnetwork.components.VerticalGapSmall
 import com.example.socialnetwork.constants.backgroundColor
 import com.example.socialnetwork.constants.largeTextSize
+import com.example.socialnetwork.constants.myTag
 import com.example.socialnetwork.constants.screenPadding
 import com.example.socialnetwork.constants.smallTextSize
 import com.example.socialnetwork.navigation.Screens
-import com.example.socialnetwork.presentation.auth.AuthViewModel
 import com.example.socialnetwork.state.UiState
 import com.example.socialnetwork.ui.theme.YellowDark
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun LoginScreen(
     navHostController: NavHostController,
-    loginViewModel: AuthViewModel,
+    loginViewModel: LoginViewModel,
+    scope: CoroutineScope?,
+    snackbarHostState: SnackbarHostState?,
 ) {
     val focusManager = LocalFocusManager.current
 
@@ -58,29 +69,49 @@ fun LoginScreen(
 
     //state
     val uiState = loginViewModel.loginData.collectAsState().value
+    var snackbarMessage by remember { mutableStateOf("") }
+    var showSnackbar by remember { mutableStateOf(false) }
 
     //UI
-    //run something on going to next page
-    LaunchedEffect(key1 = Unit) {
+    LaunchedEffect(key1 = uiState) {
+        if (uiState is UiState.SUCCESS) {
+            snackbarMessage = uiState.data
+            showSnackbar = true
 
+            navHostController.navigate(Screens.HomeFeedScreen.route) {
+                popUpTo(
+                    navHostController.graph.startDestinationId
+                ) {
+                    inclusive = true
+                }
+            }
+        } else if (uiState is UiState.ERROR) {
+            snackbarHostState?.currentSnackbarData?.dismiss()
+            snackbarMessage = uiState.error.toString()
+            showSnackbar = true
+        }
     }
 
-//    LaunchedEffect(key1 = uiState) {
-//        if (uiState is UiState.SUCCESS) {
-//            println("login user success goto next screen")
-//
-//            navController.navigate(Screens.MainNavScreen.route) {
-//                popUpTo(
-//                    navController.graph.startDestinationId
-////                    Screens.LoginScreen.route
-//                ) {
-//                    inclusive = true
-//                }
-//            }
-//        } else if (uiState is UiState.ERROR) {
-//
-//        }
-//    }
+
+    //UI
+    if (showSnackbar) {
+        if (scope != null && snackbarHostState != null) {
+
+            LaunchedEffect(showSnackbar) {
+                scope.launch {
+                    snackbarHostState.showSnackbar(
+                        message = snackbarMessage,
+                        actionLabel = "Dismiss",
+                        duration = SnackbarDuration.Long
+                    )
+                    showSnackbar = false
+
+                }
+            }
+        }
+    }
+
+
 
     Box(
         contentAlignment = Alignment.Center,
@@ -147,8 +178,6 @@ fun LoginScreen(
                             println("reached here")
                             loginViewModel.userLogin()
                         }
-
-
                     },
                     text = "Login",
                     modifier = Modifier

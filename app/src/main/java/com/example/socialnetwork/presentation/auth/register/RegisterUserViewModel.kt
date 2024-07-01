@@ -1,12 +1,16 @@
-package com.example.socialnetwork.presentation.auth
+package com.example.socialnetwork.presentation.auth.register
 
 import android.app.Application
+import android.util.Log
 import android.util.Patterns
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.socialnetwork.constants.myTag
 import com.example.socialnetwork.constants.noInternetError
 import com.example.socialnetwork.constants.somethingWentWrongError
 import com.example.socialnetwork.data.model.registerUserRequestModel.RegisterUserRequestModel
@@ -19,17 +23,16 @@ import kotlinx.coroutines.launch
 
 import javax.inject.Inject
 
-//@HiltViewModel
-class AuthViewModel @Inject constructor(
-//    private val app: Application,
-//    private val registerUserUseCase: RegisterUserUseCase,
-//    private val preferencesManager: PreferencesManager,
-//    private val loginUserUseCase: LoginUserUseCase,
-//    private val globalViewModel: GlobalViewModel,
+@HiltViewModel
+class RegisterUserViewModel @Inject constructor(
+    private val app: Application,
+    private val registerUserUseCase: RegisterUserUseCase,
 ) : ViewModel() {
 
-    var loginData = MutableStateFlow<UiState<String>>(UiState.INITIAL())
     var registerData = MutableStateFlow<UiState<String>>(UiState.INITIAL())
+
+    private val _errorMessage = MutableLiveData<String?>()
+    val errorMessage: LiveData<String?> = _errorMessage
 
     var emailValue by mutableStateOf("")
         private set
@@ -134,28 +137,10 @@ class AuthViewModel @Inject constructor(
         return validateUserName() && validateEmail() && validatePassword() && validatePasswordMatch()
     }
 
-
-    fun userLogin() {
-        loginData.tryEmit(UiState.LOADING())
-        //
-//        val loginRequestModel = LoginRequestModel(
-//            emailValue,
-//            passwordValue,
-//        )
-
-//        loginUserUseCase(loginRequestModel).onEach {
-//            preferencesManager.saveData("token", it?.token ?: "")
-//
-//            globalViewModel.checkIsUserLoggedIn()
-//
-//            loginData.tryEmit(UiState.SUCCESS(it?.token ?: ""))
-//        }.catch {
-//            println("error while logging in view model = ${it.message}")
-//            loginData.tryEmit(UiState.ERROR(it.message ?: "Error whi le logging in"))
-//        }.launchIn(viewModelScope)
-    }
-
     fun userRegister() {
+
+        registerData.tryEmit(UiState.LOADING())
+
         val registerUserRequestModel = RegisterUserRequestModel(
             userName = userNameValue,
             email = emailValue,
@@ -164,19 +149,33 @@ class AuthViewModel @Inject constructor(
         )
 
         viewModelScope.launch {
-//            try {
-//                if (isInternetAvailable(app)) {
-//                    val response = registerUserUseCase.execute(registerUserRequestModel)
-//
-//                    registerData.tryEmit(UiState.SUCCESS(response.message ?: ""))
-//                } else {
-//                    registerData.tryEmit(UiState.ERROR(noInternetError))
-//
-//                }
-//            } catch (e: Exception) {
-//                registerData.tryEmit(UiState.ERROR(somethingWentWrongError(e)))
-//
-//            }
+            try {
+                if (isInternetAvailable(app)) {
+                    val response = registerUserUseCase.execute(registerUserRequestModel)
+
+                    Log.i(myTag, "register user response = ${response.message} \n ${response.data}")
+
+
+                    if (response.message != null) {
+                        Log.i(myTag, "error found")
+                        registerData.tryEmit(UiState.ERROR(response.message ?: ""))
+                    } else {
+                        Log.i(myTag, "success response")
+                        registerData.tryEmit(UiState.SUCCESS(response.data?.message ?: ""))
+                    }
+
+                } else {
+
+                    Log.i(myTag, "no internet")
+                    registerData.tryEmit(UiState.ERROR(noInternetError))
+
+                }
+            } catch (e: Exception) {
+                Log.i(myTag, "register user error = ${e.message}")
+
+                registerData.tryEmit(UiState.ERROR(somethingWentWrongError(e)))
+
+            }
         }
 
 

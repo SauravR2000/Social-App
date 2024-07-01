@@ -1,8 +1,11 @@
 package com.example.socialnetwork.data.repository.dataSourceImpl
 
 import com.example.socialnetwork.data.api.SocialApiService
+import com.example.socialnetwork.data.model.loginSuccessResponseModel.LoginSuccessResponseModel
+import com.example.socialnetwork.data.model.loginUserRequesetModel.LoginUserRequestModel
+import com.example.socialnetwork.data.model.postListModel.PostListModel
 import com.example.socialnetwork.data.model.registerUserRequestModel.RegisterUserRequestModel
-import com.example.socialnetwork.data.model.registerUserResponseModel.RegisterUserResponseModel
+import com.example.socialnetwork.data.model.successResponseModel.SuccessResponseModel
 import com.example.socialnetwork.data.repository.dataSource.SocialRemoteDataSource
 import retrofit2.Response
 import javax.inject.Inject
@@ -10,7 +13,15 @@ import javax.inject.Inject
 class SocialRemoteDataSourceImpl @Inject constructor(
     private val socialApiService: SocialApiService
 ) : SocialRemoteDataSource {
-    override suspend fun registerUser(registerUserRequestModel: RegisterUserRequestModel): Response<RegisterUserResponseModel> {
+    override suspend fun registerUser(registerUserRequestModel: RegisterUserRequestModel): Response<SuccessResponseModel> {
         return socialApiService.registerUser(registerUserRequestModel)
+    }
+
+    override suspend fun loginUser(loginUserRequestModel: LoginUserRequestModel): Response<LoginSuccessResponseModel> {
+        return socialApiService.loginUser(loginUserRequestModel)
+    }
+
+    override suspend fun getAllPosts(): Response<PostListModel> {
+        return socialApiService.getAllPosts()
     }
 }

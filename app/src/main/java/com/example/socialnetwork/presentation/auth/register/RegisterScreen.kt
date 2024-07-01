@@ -1,5 +1,6 @@
 package com.example.socialnetwork.presentation.auth.register
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -14,9 +15,16 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Email
 import androidx.compose.material.icons.rounded.Password
 import androidx.compose.material.icons.rounded.Person
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -33,28 +41,81 @@ import com.example.socialnetwork.components.VerticalGapMedium
 import com.example.socialnetwork.components.VerticalGapSmall
 import com.example.socialnetwork.constants.backgroundColor
 import com.example.socialnetwork.constants.largeTextSize
+import com.example.socialnetwork.constants.myTag
 import com.example.socialnetwork.constants.screenPadding
 import com.example.socialnetwork.constants.smallTextSize
 import com.example.socialnetwork.navigation.Screens
-import com.example.socialnetwork.presentation.auth.AuthViewModel
 import com.example.socialnetwork.state.UiState
 import com.example.socialnetwork.ui.theme.YellowDark
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 
 @Composable
 fun RegisterScreen(
     navHostController: NavHostController,
-    loginViewModel: AuthViewModel,
+    registerViewModel: RegisterUserViewModel,
+    scope: CoroutineScope?,
+    snackbarHostState: SnackbarHostState?,
 ) {
 
     val focusManager = LocalFocusManager.current
 
 
     //state
-    val uiState = loginViewModel.registerData.collectAsState().value
+    val uiState = registerViewModel.registerData.collectAsState().value
+    var snackbarMessage by remember { mutableStateOf("") }
+    var showSnackbar by remember { mutableStateOf(false) }
+
+
+    //launch effect
+    LaunchedEffect(key1 = uiState) {
+        if (uiState is UiState.SUCCESS) {
+            println("login user success goto next screen == ${uiState}")
+
+            snackbarMessage = uiState.data
+            showSnackbar = true
+
+            navHostController.navigate(Screens.LoginScreen.route) {
+                popUpTo(
+                    navHostController.graph.startDestinationId
+                ) {
+                    inclusive = true
+                }
+            }
+        } else if (uiState is UiState.ERROR) {
+
+            snackbarHostState?.currentSnackbarData?.dismiss()
+            snackbarMessage = uiState.error.toString()
+            showSnackbar = true
+        }
+    }
 
 
     //UI
+    if (showSnackbar) {
+        if (scope != null && snackbarHostState != null) {
+            Log.i(myTag, "here 1")
+
+            LaunchedEffect(showSnackbar) {
+                Log.i(myTag, "here 2")
+
+                scope.launch {
+                    Log.i(myTag, "here 3")
+                    snackbarHostState.showSnackbar(
+                        message = snackbarMessage,
+                        actionLabel = "Dismiss",
+                        duration = SnackbarDuration.Long
+                    )
+                    showSnackbar = false
+
+                }
+            }
+        }
+    }
+
+
+
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
@@ -82,46 +143,46 @@ fun RegisterScreen(
                 )
                 VerticalGapMedium()
                 CustomTextField(
-                    value = loginViewModel.userNameValue,
+                    value = registerViewModel.userNameValue,
                     placeholder = "User Name",
-                    onChange = loginViewModel::setUserName,
-                    isError = loginViewModel.userNameError.isNotEmpty(),
+                    onChange = registerViewModel::setUserName,
+                    isError = registerViewModel.userNameError.isNotEmpty(),
                     icon = Icons.Rounded.Person,
-                    errorMessage = loginViewModel.userNameError,
+                    errorMessage = registerViewModel.userNameError,
                     modifier = Modifier
                 )
                 VerticalGapMedium()
                 CustomTextField(
-                    value = loginViewModel.emailValue,
+                    value = registerViewModel.emailValue,
                     placeholder = "Email",
-                    onChange = loginViewModel::setEmail,
-                    isError = loginViewModel.emailError.isNotEmpty(),
+                    onChange = registerViewModel::setEmail,
+                    isError = registerViewModel.emailError.isNotEmpty(),
                     icon = Icons.Rounded.Email,
-                    errorMessage = loginViewModel.emailError,
+                    errorMessage = registerViewModel.emailError,
                     keyboardType = KeyboardType.Email,
                     modifier = Modifier
 
                 )
                 VerticalGapMedium()
                 CustomTextField(
-                    value = loginViewModel.passwordValue,
-                    onChange = loginViewModel::setPassword,
+                    value = registerViewModel.passwordValue,
+                    onChange = registerViewModel::setPassword,
                     placeholder = "Password",
-                    isError = loginViewModel.passwordError.isNotEmpty(),
+                    isError = registerViewModel.passwordError.isNotEmpty(),
                     icon = Icons.Rounded.Password,
                     isPassword = true,
-                    errorMessage = loginViewModel.passwordError,
+                    errorMessage = registerViewModel.passwordError,
                     modifier = Modifier
                 )
                 VerticalGapSmall()
                 CustomTextField(
-                    value = loginViewModel.confirmPasswordValue,
-                    onChange = loginViewModel::setConfirmPassword,
+                    value = registerViewModel.confirmPasswordValue,
+                    onChange = registerViewModel::setConfirmPassword,
                     placeholder = "Confirm Password",
-                    isError = loginViewModel.confirmPasswordError.isNotEmpty(),
+                    isError = registerViewModel.confirmPasswordError.isNotEmpty(),
                     icon = Icons.Rounded.Password,
                     isPassword = true,
-                    errorMessage = loginViewModel.confirmPasswordError,
+                    errorMessage = registerViewModel.confirmPasswordError,
                     modifier = Modifier
                 )
                 VerticalGapSmall()
@@ -132,9 +193,9 @@ fun RegisterScreen(
 //                    isEnabled = state.value?.isLoading != true,
                     onClick = {
                         focusManager.clearFocus()
-                        if (loginViewModel.validateRegisterForm()) {
+                        if (registerViewModel.validateRegisterForm()) {
                             println("reached here")
-                            loginViewModel.userRegister()
+                            registerViewModel.userRegister()
                         }
 
                     },
@@ -146,6 +207,7 @@ fun RegisterScreen(
                     isLoading = when (uiState) {
                         is UiState.LOADING ->
                             true
+
 
                         else ->
                             false

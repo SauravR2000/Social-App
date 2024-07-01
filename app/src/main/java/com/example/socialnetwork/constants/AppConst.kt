@@ -8,3 +8,5 @@ val backgroundColor = 0xFFDDE1E4
 val screenPadding = 10.dp
 
 val buttonColor = Color.Magenta
+
+val myTag = "myTag"
