@@ -6,7 +6,9 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import com.example.socialnetwork.navigation.Navigation
 import com.example.socialnetwork.ui.theme.SocialNetworkTheme
+import com.example.socialnetwork.utils.PreferencesManager
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 
 @AndroidEntryPoint

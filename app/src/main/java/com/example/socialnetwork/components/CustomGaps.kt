@@ -28,6 +28,11 @@ fun HorizontalGapSmall() {
 }
 
 @Composable
+fun HorizontalGapVerySmall() {
+    Box(modifier = Modifier.width(5.dp))
+}
+
+@Composable
 fun HorizontalGapMedium() {
     Box(modifier = Modifier.width(15.dp))
 }

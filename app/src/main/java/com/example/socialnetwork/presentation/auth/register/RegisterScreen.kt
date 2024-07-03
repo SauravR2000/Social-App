@@ -34,6 +34,8 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavHostController
 import com.example.socialnetwork.components.CustomButton
 import com.example.socialnetwork.components.CustomTextField
@@ -54,7 +56,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun RegisterScreen(
     navHostController: NavHostController,
-    registerViewModel: RegisterUserViewModel,
+    registerViewModel: RegisterUserViewModel = hiltViewModel(),
     scope: CoroutineScope?,
     snackbarHostState: SnackbarHostState?,
 ) {
@@ -63,7 +65,7 @@ fun RegisterScreen(
 
 
     //state
-    val uiState = registerViewModel.registerData.collectAsState().value
+    val uiState = registerViewModel.registerData.collectAsState(initial = UiState.LOADING()).value
     var snackbarMessage by remember { mutableStateOf("") }
     var showSnackbar by remember { mutableStateOf(false) }
 
@@ -75,6 +77,9 @@ fun RegisterScreen(
 
             snackbarMessage = uiState.data
             showSnackbar = true
+
+//            val backStackEntry = navHostController.getBackStackEntry(Screens.RegisterScreen.route)
+//            ViewModelProvider(backStackEntry).get(RegisterUserViewModel::class.java).clear()
 
             navHostController.navigate(Screens.LoginScreen.route) {
                 popUpTo(

@@ -35,6 +35,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.socialnetwork.components.CustomButton
 import com.example.socialnetwork.components.CustomTextField
@@ -56,7 +57,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun LoginScreen(
     navHostController: NavHostController,
-    loginViewModel: LoginViewModel,
+    loginViewModel: LoginViewModel = hiltViewModel(),
     scope: CoroutineScope?,
     snackbarHostState: SnackbarHostState?,
 ) {

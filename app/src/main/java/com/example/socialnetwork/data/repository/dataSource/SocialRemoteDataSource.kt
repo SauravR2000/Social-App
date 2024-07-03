@@ -3,6 +3,8 @@ package com.example.socialnetwork.data.repository.dataSource
 import com.example.socialnetwork.data.model.loginSuccessResponseModel.LoginSuccessResponseModel
 import com.example.socialnetwork.data.model.loginUserRequesetModel.LoginUserRequestModel
 import com.example.socialnetwork.data.model.postListModel.PostListModel
+import com.example.socialnetwork.data.model.refreshTokenRequestModel.RefreshTokenRequestModel
+import com.example.socialnetwork.data.model.refreshTokenResponseModel.RefreshTokenResponseModel
 import com.example.socialnetwork.data.model.registerUserRequestModel.RegisterUserRequestModel
 import com.example.socialnetwork.data.model.successResponseModel.SuccessResponseModel
 import retrofit2.Response
@@ -14,4 +16,6 @@ interface SocialRemoteDataSource {
     suspend fun loginUser(loginUserRequestModel: LoginUserRequestModel): Response<LoginSuccessResponseModel>
 
     suspend fun getAllPosts(): Response<PostListModel>
+
+    suspend fun refreshtToken(refreshTokenRequestModel: RefreshTokenRequestModel): Response<RefreshTokenResponseModel>
 }

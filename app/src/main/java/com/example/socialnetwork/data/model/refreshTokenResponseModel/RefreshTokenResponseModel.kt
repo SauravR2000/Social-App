@@ -1,11 +1,11 @@
-package com.example.socialnetwork.data.model.postListModel
+package com.example.socialnetwork.data.model.refreshTokenResponseModel
 
 
 import com.google.gson.annotations.SerializedName
 
-data class PostListModel(
+data class RefreshTokenResponseModel(
     @SerializedName("data")
-    val `data`: List<PostData>,
+    val `data`: Data,
     @SerializedName("message")
     val message: String,
     @SerializedName("success")

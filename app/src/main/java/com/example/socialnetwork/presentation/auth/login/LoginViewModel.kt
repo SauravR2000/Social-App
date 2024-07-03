@@ -70,15 +70,14 @@ class LoginViewModel @Inject constructor(
         )
 
         viewModelScope.launch {
-            try {
-                if (isInternetAvailable(app)) {
+
+            if (isInternetAvailable(app)) {
+                try {
                     val response = loginUserUseCase.execute(loginUserRequestModel)
-
                     log("login user response = ${response.data?.message ?: ""}")
-
                     if (response.message != null) {
-                        log("error in login = ${response.message}")
-                        loginData.tryEmit(UiState.ERROR(response.message ?: ""))
+                        log("error in login message = ${response.message}")
+                        loginData.tryEmit(UiState.ERROR(response.message))
                     } else {
                         log("login success = ${response.data}")
 
@@ -87,17 +86,18 @@ class LoginViewModel @Inject constructor(
 
                         loginData.tryEmit(UiState.SUCCESS(response.data?.message ?: ""))
                     }
+                } catch (e: Exception) {
+                    log("error in user login = ${e.message}")
 
-                } else {
-                    Log.i(myTag, "no internet")
-                    loginData.tryEmit(UiState.ERROR(noInternetError))
-
+                    loginData.tryEmit(UiState.ERROR(somethingWentWrongError(e)))
                 }
-            } catch (e: Exception) {
-                log("error in user login = ${e.message}")
+            } else {
+                Log.i(myTag, "no internet")
+                loginData.tryEmit(UiState.ERROR(noInternetError))
 
-                loginData.tryEmit(UiState.ERROR(somethingWentWrongError(e)))
             }
+
+
         }
     }
 

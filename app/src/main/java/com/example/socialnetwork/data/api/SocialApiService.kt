@@ -3,6 +3,8 @@ package com.example.socialnetwork.data.api
 import com.example.socialnetwork.data.model.loginSuccessResponseModel.LoginSuccessResponseModel
 import com.example.socialnetwork.data.model.loginUserRequesetModel.LoginUserRequestModel
 import com.example.socialnetwork.data.model.postListModel.PostListModel
+import com.example.socialnetwork.data.model.refreshTokenRequestModel.RefreshTokenRequestModel
+import com.example.socialnetwork.data.model.refreshTokenResponseModel.RefreshTokenResponseModel
 import com.example.socialnetwork.data.model.registerUserRequestModel.RegisterUserRequestModel
 import com.example.socialnetwork.data.model.successResponseModel.SuccessResponseModel
 import retrofit2.Response
@@ -24,5 +26,8 @@ interface SocialApiService {
 
     @GET("post")
     suspend fun getAllPosts(): Response<PostListModel>
+
+    @POST("account/token/refresh")
+    suspend fun refreshToken(@Body refreshTokenRequestModel: RefreshTokenRequestModel): Response<RefreshTokenResponseModel>
 
 }

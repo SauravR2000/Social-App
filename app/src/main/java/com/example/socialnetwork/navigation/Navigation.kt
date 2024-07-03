@@ -14,25 +14,29 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.socialnetwork.constants.accessToken
+import com.example.socialnetwork.presentation.GlobalViewModel
 import com.example.socialnetwork.presentation.auth.register.RegisterUserViewModel
 import com.example.socialnetwork.presentation.auth.login.LoginScreen
 import com.example.socialnetwork.presentation.auth.login.LoginViewModel
 import com.example.socialnetwork.presentation.auth.register.RegisterScreen
 import com.example.socialnetwork.presentation.posts.HomeFeedScreen
 import com.example.socialnetwork.presentation.posts.HomeViewModel
+import com.example.socialnetwork.utils.PreferencesManager
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun Navigation(
     navController: NavHostController = rememberNavController(),
-    loginViewModel: LoginViewModel = hiltViewModel(),
-    registerViewModel: RegisterUserViewModel = hiltViewModel(),
     homeViewModel: HomeViewModel = hiltViewModel(),
+    globalViewModel: GlobalViewModel = hiltViewModel(),
 ) {
 
     val scope = rememberCoroutineScope()
     val snackBarHostState = remember { SnackbarHostState() }
+
+
 
     Scaffold(
         snackbarHost = {
@@ -41,20 +45,23 @@ fun Navigation(
     ) {
         NavHost(
             navController = navController,
-            startDestination = Screens.LoginScreen.route,
+            startDestination = if (globalViewModel.isLoggedIn.value) {
+                Screens.HomeFeedScreen.route
+            } else {
+                Screens.LoginScreen.route
+            },
             modifier = Modifier.safeContentPadding(),
         ) {
             composable(Screens.LoginScreen.route) {
                 LoginScreen(
                     navHostController = navController,
-                    loginViewModel,
-                    scope,
-                    snackBarHostState
+                    scope = scope,
+                    snackbarHostState = snackBarHostState
                 )
             }
 
             composable(Screens.RegisterScreen.route) {
-                RegisterScreen(navController, registerViewModel, scope, snackBarHostState)
+                RegisterScreen(navController, scope = scope, snackbarHostState = snackBarHostState)
             }
 
             composable(Screens.HomeFeedScreen.route) {

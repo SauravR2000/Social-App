@@ -3,7 +3,7 @@ package com.example.socialnetwork.data.model.postListModel
 
 import com.google.gson.annotations.SerializedName
 
-data class Data(
+data class PostData(
     @SerializedName("commentCount")
     val commentCount: Int,
     @SerializedName("createdAt")

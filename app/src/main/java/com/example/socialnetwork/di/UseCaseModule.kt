@@ -4,6 +4,7 @@ import com.example.socialnetwork.domain.repository.AuthRepository
 import com.example.socialnetwork.domain.repository.PostRepository
 import com.example.socialnetwork.domain.usecase.GetAllPostsUseCase
 import com.example.socialnetwork.domain.usecase.LoginUserUseCase
+import com.example.socialnetwork.domain.usecase.RefreshTokenUseCase
 import com.example.socialnetwork.domain.usecase.RegisterUserUseCase
 import dagger.Module
 import dagger.Provides
@@ -20,6 +21,12 @@ class UseCaseModule {
     @Singleton
     fun provideRegisterUserUseCase(authRepository: AuthRepository): RegisterUserUseCase {
         return RegisterUserUseCase(authRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideRefreshTokenUseCase(authRepository: AuthRepository): RefreshTokenUseCase {
+        return RefreshTokenUseCase(authRepository)
     }
 
     @Provides

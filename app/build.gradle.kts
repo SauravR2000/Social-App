@@ -36,6 +36,9 @@ android {
     }
 
     buildTypes {
+        create("customDebugType") {
+            isDebuggable = true
+        }
         release {
             isMinifyEnabled = false
             proguardFiles(
@@ -121,6 +124,8 @@ dependencies {
     //interceptor
     implementation("com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.6")
 
+    //async image
+    implementation("io.coil-kt:coil-compose:2.6.0")
 }
 
 kapt {
