@@ -16,3 +16,5 @@ val myTag = "myTag"
 val pagePadding = 15.dp
 
 var customModifier: Modifier = Modifier.padding(horizontal = pagePadding)
+
+val customImage = "https://media.tenor.com/JgZ_QPzmdUsAAAAe/dog-smirk.png"

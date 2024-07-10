@@ -6,7 +6,15 @@ plugins {
     id("com.google.dagger.hilt.android")
     id("dagger.hilt.android.plugin")
     id("kotlin-kapt")
+    id("com.apollographql.apollo3") version "4.0.0-beta.7"
 }
+
+apollo {
+    service("service") {
+        packageName.set("com.example")
+    }
+}
+
 
 android {
     namespace = "com.example.socialnetwork"
@@ -27,6 +35,12 @@ android {
             "String",
             "BASE_URL",
             appProperties.getProperty("BASE_URL")?.trim().toString()
+        )
+
+        buildConfigField(
+            "String",
+            "BASE_URL_GRAPHQL",
+            appProperties.getProperty("BASE_URL_GRAPHQL")?.trim().toString()
         )
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -116,6 +130,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-compose:$lifecycle_version")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle_version")
 
+
     //preference
     val preference_version = "1.2.1"
     implementation("androidx.preference:preference-ktx:$preference_version")
@@ -126,6 +141,13 @@ dependencies {
 
     //async image
     implementation("io.coil-kt:coil-compose:2.6.0")
+
+    //compose  (for refresh indicator)
+    implementation("androidx.compose.material:material:1.6.8")
+
+    //apollo graphql
+    implementation("com.apollographql.apollo3:apollo-runtime:4.0.0-beta.7")
+
 }
 
 kapt {

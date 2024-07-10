@@ -1,5 +1,6 @@
 package com.example.socialnetwork.di
 
+import com.apollographql.apollo3.ApolloClient
 import com.example.socialnetwork.data.api.SocialApiService
 import com.example.socialnetwork.data.repository.dataSource.SocialRemoteDataSource
 import com.example.socialnetwork.data.repository.dataSourceImpl.SocialRemoteDataSourceImpl
@@ -16,8 +17,14 @@ class RemoteDataModule {
 
     @Provides
     @Singleton
-    fun provideRemoteDataSource(socialApiService: SocialApiService): SocialRemoteDataSource {
-        return SocialRemoteDataSourceImpl(socialApiService)
+    fun provideRemoteDataSource(
+        socialApiService: SocialApiService,
+        apolloClient: ApolloClient,
+    ): SocialRemoteDataSource {
+        return SocialRemoteDataSourceImpl(
+            socialApiService = socialApiService,
+            apolloClient = apolloClient,
+        )
     }
 
 

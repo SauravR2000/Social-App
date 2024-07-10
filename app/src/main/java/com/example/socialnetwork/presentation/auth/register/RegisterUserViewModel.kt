@@ -161,7 +161,11 @@ class RegisterUserViewModel @Inject constructor(
                         registerData.tryEmit(UiState.ERROR(response.message ?: ""))
                     } else {
                         Log.i(myTag, "success response")
-                        registerData.tryEmit(UiState.SUCCESS(response.data?.message ?: ""))
+                        registerData.tryEmit(
+                            UiState.SUCCESS(
+                                response.data?.register?.userName ?: ""
+                            )
+                        )
                     }
 
                 } else {

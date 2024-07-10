@@ -45,11 +45,12 @@ fun Navigation(
     ) {
         NavHost(
             navController = navController,
-            startDestination = if (globalViewModel.isLoggedIn.value) {
-                Screens.HomeFeedScreen.route
-            } else {
-                Screens.LoginScreen.route
-            },
+//            startDestination = if (globalViewModel.isLoggedIn.value) {
+//                Screens.HomeFeedScreen.route
+//            } else {
+//                Screens.LoginScreen.route
+//            },
+            startDestination = Screens.LoginScreen.route,
             modifier = Modifier.safeContentPadding(),
         ) {
             composable(Screens.LoginScreen.route) {

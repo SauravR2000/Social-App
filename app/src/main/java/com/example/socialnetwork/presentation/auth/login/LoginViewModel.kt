@@ -9,6 +9,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.apollographql.apollo3.exception.ApolloException
+import com.apollographql.apollo3.exception.ApolloHttpException
+import com.example.LoginMutation
 import com.example.socialnetwork.constants.accessToken
 import com.example.socialnetwork.constants.log
 import com.example.socialnetwork.constants.myTag
@@ -57,7 +60,13 @@ class LoginViewModel @Inject constructor(
     }
 
     fun validateLoginForm(): Boolean {
-        return validateEmail(emailValue)
+        if (!validateEmail(emailValue)) {
+            emailError = "Enter valid email"
+
+            return false
+        }
+        return true
+
     }
 
 
@@ -72,24 +81,55 @@ class LoginViewModel @Inject constructor(
         viewModelScope.launch {
 
             if (isInternetAvailable(app)) {
+                //for rest api
+//                try {
+//                    val response = loginUserUseCase.execute(loginUserRequestModel)
+//                    log("login user response = ${response.data?.message ?: ""}")
+//                    if (response.message != null) {
+//                        log("error in login message = ${response.message}")
+//                        loginData.tryEmit(UiState.ERROR(response.message))
+//                    } else {
+//                        log("login success = ${response.data}")
+//
+//                        preferencesManager.saveData(accessToken, response.data?.accessToken ?: "")
+//                        preferencesManager.saveData(refreshToken, response.data?.refreshToken ?: "")
+//
+//                        loginData.tryEmit(UiState.SUCCESS(response.data?.message ?: ""))
+//                    }
+//                } catch (e: Exception) {
+//                    log("error in user login = ${e.message}")
+//
+//                    loginData.tryEmit(UiState.ERROR(somethingWentWrongError(e)))
+//                }
+
+
+                //for graphQL
                 try {
                     val response = loginUserUseCase.execute(loginUserRequestModel)
-                    log("login user response = ${response.data?.message ?: ""}")
+                    log("login user response = ${response.data?.login ?: ""}")
                     if (response.message != null) {
                         log("error in login message = ${response.message}")
                         loginData.tryEmit(UiState.ERROR(response.message))
                     } else {
                         log("login success = ${response.data}")
 
-                        preferencesManager.saveData(accessToken, response.data?.accessToken ?: "")
-                        preferencesManager.saveData(refreshToken, response.data?.refreshToken ?: "")
+                        val responseData: LoginMutation.Login? = response.data?.login
 
-                        loginData.tryEmit(UiState.SUCCESS(response.data?.message ?: ""))
+                        preferencesManager.saveData(accessToken, responseData?.accessToken ?: "")
+                        preferencesManager.saveData(refreshToken, responseData?.refreshToken ?: "")
+
+                        loginData.tryEmit(UiState.SUCCESS("Login Successful"))
                     }
-                } catch (e: Exception) {
+                } catch (e: ApolloHttpException) {
+                    log("error in user login = ${e}")
+                    log("error in user login status code = ${e.statusCode}")
                     log("error in user login = ${e.message}")
 
                     loginData.tryEmit(UiState.ERROR(somethingWentWrongError(e)))
+                } catch (e: Exception) {
+                    log("exception catch = $e")
+                    loginData.tryEmit(UiState.ERROR(somethingWentWrongError(e)))
+
                 }
             } else {
                 Log.i(myTag, "no internet")

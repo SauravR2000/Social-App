@@ -21,6 +21,7 @@ import com.example.socialnetwork.components.DoubleTapAnimation
 import com.example.socialnetwork.components.HorizontalGapSmall
 import com.example.socialnetwork.components.HorizontalGapVerySmall
 import com.example.socialnetwork.components.VerticalGapSmall
+import com.example.socialnetwork.constants.customImage
 import com.example.socialnetwork.constants.customModifier
 import com.example.socialnetwork.constants.smallTextSize
 import com.example.socialnetwork.data.model.postListModel.PostData
@@ -42,7 +43,7 @@ fun PostCard(
         VerticalGapSmall()
 //        CustomImage(imageUrl = "https://tse1.mm.bing.net/th/id/OET.7252da000e8341b2ba1fb61c275c1f30?w=594&h=594&c=7&rs=1&o=5&pid=1.9")
         DoubleTapAnimation(
-            imageResources = "https://tse1.mm.bing.net/th/id/OET.7252da000e8341b2ba1fb61c275c1f30?w=594&h=594&c=7&rs=1&o=5&pid=1.9",
+            imageResources = customImage,
             iconResource = R.drawable.baseline_favorite_24,
         ) {
 

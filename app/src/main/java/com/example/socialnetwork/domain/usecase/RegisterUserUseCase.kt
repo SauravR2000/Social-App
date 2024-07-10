@@ -1,5 +1,6 @@
 package com.example.socialnetwork.domain.usecase
 
+import com.example.RegisterMutation
 import com.example.socialnetwork.data.model.registerUserRequestModel.RegisterUserRequestModel
 import com.example.socialnetwork.data.model.successResponseModel.SuccessResponseModel
 import com.example.socialnetwork.data.util.Resource
@@ -9,7 +10,12 @@ import javax.inject.Inject
 class RegisterUserUseCase @Inject constructor(
     private val authRepository: AuthRepository
 ) {
-    suspend fun execute(registerUserRequestModel: RegisterUserRequestModel): Resource<SuccessResponseModel> {
+//    suspend fun execute(registerUserRequestModel: RegisterUserRequestModel): Resource<SuccessResponseModel> {
+//        return authRepository.registerUser(registerUserRequestModel)
+//    }
+
+
+    suspend fun execute(registerUserRequestModel: RegisterUserRequestModel): Resource<RegisterMutation.Data> {
         return authRepository.registerUser(registerUserRequestModel)
     }
 }

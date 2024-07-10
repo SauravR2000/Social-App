@@ -1,0 +1,6 @@
+mutation Register($input: SingUpInput!) {
+    register(input: $input) {
+        email
+        userName
+    }
+}

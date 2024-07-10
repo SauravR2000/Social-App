@@ -25,6 +25,7 @@ class HomeViewModel @Inject constructor(
     var homeData = MutableStateFlow<UiState<PostListModel?>>(UiState.INITIAL())
 
 
+
     fun getAllPosts() {
 
         homeData.tryEmit(UiState.LOADING())
