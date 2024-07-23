@@ -12,13 +12,13 @@ import com.example.socialnetwork.data.util.Resource
 
 interface AuthRepository {
 
-//    suspend fun registerUser(registerUserRequestModel: registerUserRequestModelRegisterUserRequestModel): Resource<SuccessResponseModel>
+    suspend fun registerUser(registerUserRequestModel: RegisterUserRequestModel): Resource<SuccessResponseModel>
 
-    //    suspend fun loginUser(loginUserRequestModel: LoginUserRequestModel): Resource<LoginSuccessResponseModel>
+        suspend fun loginUser(loginUserRequestModel: LoginUserRequestModel): Resource<LoginSuccessResponseModel>
 
-    suspend fun registerUser(registerUserRequestModel: RegisterUserRequestModel): Resource<RegisterMutation.Data>
+//    suspend fun registerUser(registerUserRequestModel: RegisterUserRequestModel): Resource<RegisterMutation.Data>
 
-    suspend fun loginUser(loginUserRequestModel: LoginUserRequestModel): Resource<LoginMutation.Data>
+//    suspend fun loginUser(loginUserRequestModel: LoginUserRequestModel): Resource<LoginMutation.Data>
 
     suspend fun refreshToken(refreshTokenRequestModel: RefreshTokenRequestModel): Resource<RefreshTokenResponseModel>
 }

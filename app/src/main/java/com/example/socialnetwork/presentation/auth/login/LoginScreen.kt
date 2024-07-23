@@ -79,7 +79,7 @@ fun LoginScreen(
             snackbarMessage = uiState.data
             showSnackbar = true
 
-            navHostController.navigate(Screens.HomeFeedScreen.route) {
+            navHostController.navigate(Screens.MainScreen.route) {
                 popUpTo(
                     navHostController.graph.startDestinationId
                 ) {

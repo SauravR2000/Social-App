@@ -44,7 +44,7 @@ class ApiServiceModule {
             .Builder()
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
-            .baseUrl(BuildConfig.BASE_URL)
+            .baseUrl(BuildConfig.BASE_URL_API)
             .build()
             .create(SocialApiService::class.java)
     }

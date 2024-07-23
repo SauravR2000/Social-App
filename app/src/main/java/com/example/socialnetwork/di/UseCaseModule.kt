@@ -2,7 +2,9 @@ package com.example.socialnetwork.di
 
 import com.example.socialnetwork.domain.repository.AuthRepository
 import com.example.socialnetwork.domain.repository.PostRepository
+import com.example.socialnetwork.domain.repository.UserRepository
 import com.example.socialnetwork.domain.usecase.GetAllPostsUseCase
+import com.example.socialnetwork.domain.usecase.GetUserDetailUseCase
 import com.example.socialnetwork.domain.usecase.LoginUserUseCase
 import com.example.socialnetwork.domain.usecase.RefreshTokenUseCase
 import com.example.socialnetwork.domain.usecase.RegisterUserUseCase
@@ -39,5 +41,11 @@ class UseCaseModule {
     @Singleton
     fun provideGetAllPostsUseCase(postRepository: PostRepository): GetAllPostsUseCase {
         return GetAllPostsUseCase(postRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetUserDetailUseCase(userRepository: UserRepository): GetUserDetailUseCase {
+        return GetUserDetailUseCase(userRepository)
     }
 }

@@ -3,9 +3,11 @@ package com.example.socialnetwork.presentation.posts
 import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.socialnetwork.constants.log
 import com.example.socialnetwork.constants.noInternetError
 import com.example.socialnetwork.constants.somethingWentWrongError
+import com.example.socialnetwork.data.api.SocialApiService
 import com.example.socialnetwork.data.model.postListModel.PostListModel
 import com.example.socialnetwork.domain.usecase.GetAllPostsUseCase
 import com.example.socialnetwork.state.UiState
@@ -20,9 +22,17 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val app: Application,
     private val getAllPostsUseCase: GetAllPostsUseCase,
-) : ViewModel() {
+    private val socialApiService: SocialApiService,
+    ) : ViewModel() {
 
     var homeData = MutableStateFlow<UiState<PostListModel?>>(UiState.INITIAL())
+
+//    init {
+//        viewModelScope.launch {
+//            var res = socialApiService.getUserDetail("6673b4b0e93f9bef2315bd0d")
+//            log("user detail response = $res")
+//        }
+//    }
 
 
 

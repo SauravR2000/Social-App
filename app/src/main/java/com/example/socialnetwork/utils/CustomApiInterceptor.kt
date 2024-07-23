@@ -75,7 +75,7 @@ class CustomApiInterceptor @Inject constructor(
         val socialApiService = Retrofit
             .Builder()
             .addConverterFactory(GsonConverterFactory.create())
-            .baseUrl(BuildConfig.BASE_URL)
+            .baseUrl(BuildConfig.BASE_URL_API)
             .build()
             .create(SocialApiService::class.java)
 
@@ -100,7 +100,6 @@ class CustomApiInterceptor @Inject constructor(
 
 
 //class CustomApolloInterceptor
-
 class LoggingApolloInterceptor : ApolloInterceptor {
     override fun <D : Operation.Data> intercept(
         request: ApolloRequest<D>,

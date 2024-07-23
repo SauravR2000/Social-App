@@ -66,6 +66,7 @@ fun CustomImage(imageUrl: String, modifier: Modifier) {
             placeholder = painterResource(R.drawable.ic_launcher_background),
             contentDescription = stringResource(R.string.app_name),
 
+
             )
     }
 }

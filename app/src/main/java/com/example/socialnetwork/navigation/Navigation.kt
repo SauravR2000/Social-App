@@ -16,6 +16,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.socialnetwork.constants.accessToken
 import com.example.socialnetwork.presentation.GlobalViewModel
+import com.example.socialnetwork.presentation.MainScreen
 import com.example.socialnetwork.presentation.auth.register.RegisterUserViewModel
 import com.example.socialnetwork.presentation.auth.login.LoginScreen
 import com.example.socialnetwork.presentation.auth.login.LoginViewModel
@@ -29,7 +30,6 @@ import com.example.socialnetwork.utils.PreferencesManager
 @Composable
 fun Navigation(
     navController: NavHostController = rememberNavController(),
-    homeViewModel: HomeViewModel = hiltViewModel(),
     globalViewModel: GlobalViewModel = hiltViewModel(),
 ) {
 
@@ -45,14 +45,15 @@ fun Navigation(
     ) {
         NavHost(
             navController = navController,
-//            startDestination = if (globalViewModel.isLoggedIn.value) {
-//                Screens.HomeFeedScreen.route
-//            } else {
-//                Screens.LoginScreen.route
-//            },
-            startDestination = Screens.LoginScreen.route,
+            startDestination = if (globalViewModel.isLoggedIn.value) {
+                Screens.MainScreen.route
+            } else {
+                Screens.LoginScreen.route
+            },
+//            startDestination = Screens.LoginScreen.route,
             modifier = Modifier.safeContentPadding(),
         ) {
+            //login screen
             composable(Screens.LoginScreen.route) {
                 LoginScreen(
                     navHostController = navController,
@@ -61,12 +62,18 @@ fun Navigation(
                 )
             }
 
+            //register screen
             composable(Screens.RegisterScreen.route) {
                 RegisterScreen(navController, scope = scope, snackbarHostState = snackBarHostState)
             }
 
-            composable(Screens.HomeFeedScreen.route) {
-                HomeFeedScreen(navHostController = navController, homeViewModel)
+            //main page
+            composable(Screens.MainScreen.route) {
+                MainScreen(
+                    navController = navController,
+                    scope = scope,
+                    snackBarHostState = snackBarHostState,
+                )
             }
         }
     }

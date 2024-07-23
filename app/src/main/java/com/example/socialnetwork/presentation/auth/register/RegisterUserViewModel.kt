@@ -163,7 +163,8 @@ class RegisterUserViewModel @Inject constructor(
                         Log.i(myTag, "success response")
                         registerData.tryEmit(
                             UiState.SUCCESS(
-                                response.data?.register?.userName ?: ""
+//                                response.data?.register?.userName ?: ""
+                                response.data?.message ?: ""
                             )
                         )
                     }
@@ -189,6 +190,3 @@ class RegisterUserViewModel @Inject constructor(
 }
 
 
-1
-
-        2

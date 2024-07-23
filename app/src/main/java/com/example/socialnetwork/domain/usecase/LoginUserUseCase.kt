@@ -10,13 +10,12 @@ import retrofit2.Response
 class LoginUserUseCase(
     private val authRepository: AuthRepository
 ) {
-//    suspend fun execute(loginUserRequestModel: LoginUserRequestModel): Resource<LoginSuccessResponseModel> {
-//        return authRepository.loginUser(loginUserRequestModel)
-//    }
-
-
-
-    suspend fun execute(loginUserRequestModel: LoginUserRequestModel): Resource<LoginMutation.Data> {
+    suspend fun execute(loginUserRequestModel: LoginUserRequestModel): Resource<LoginSuccessResponseModel> {
         return authRepository.loginUser(loginUserRequestModel)
     }
+
+
+//    suspend fun execute(loginUserRequestModel: LoginUserRequestModel): Resource<LoginMutation.Data> {
+//        return authRepository.loginUser(loginUserRequestModel)
+//    }
 }

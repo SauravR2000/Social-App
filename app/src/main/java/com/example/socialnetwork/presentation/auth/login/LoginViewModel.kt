@@ -18,6 +18,7 @@ import com.example.socialnetwork.constants.myTag
 import com.example.socialnetwork.constants.noInternetError
 import com.example.socialnetwork.constants.refreshToken
 import com.example.socialnetwork.constants.somethingWentWrongError
+import com.example.socialnetwork.constants.userId
 import com.example.socialnetwork.data.model.loginUserRequesetModel.LoginUserRequestModel
 import com.example.socialnetwork.domain.usecase.LoginUserUseCase
 import com.example.socialnetwork.state.UiState
@@ -82,55 +83,60 @@ class LoginViewModel @Inject constructor(
 
             if (isInternetAvailable(app)) {
                 //for rest api
-//                try {
-//                    val response = loginUserUseCase.execute(loginUserRequestModel)
-//                    log("login user response = ${response.data?.message ?: ""}")
-//                    if (response.message != null) {
-//                        log("error in login message = ${response.message}")
-//                        loginData.tryEmit(UiState.ERROR(response.message))
-//                    } else {
-//                        log("login success = ${response.data}")
-//
-//                        preferencesManager.saveData(accessToken, response.data?.accessToken ?: "")
-//                        preferencesManager.saveData(refreshToken, response.data?.refreshToken ?: "")
-//
-//                        loginData.tryEmit(UiState.SUCCESS(response.data?.message ?: ""))
-//                    }
-//                } catch (e: Exception) {
-//                    log("error in user login = ${e.message}")
-//
-//                    loginData.tryEmit(UiState.ERROR(somethingWentWrongError(e)))
-//                }
-
-
-                //for graphQL
                 try {
                     val response = loginUserUseCase.execute(loginUserRequestModel)
-                    log("login user response = ${response.data?.login ?: ""}")
+                    log("login user response = ${response.data?.message ?: ""}")
                     if (response.message != null) {
                         log("error in login message = ${response.message}")
                         loginData.tryEmit(UiState.ERROR(response.message))
                     } else {
                         log("login success = ${response.data}")
 
-                        val responseData: LoginMutation.Login? = response.data?.login
+                        val userIdValue: String = response.data?.data?.id ?: ""
 
-                        preferencesManager.saveData(accessToken, responseData?.accessToken ?: "")
-                        preferencesManager.saveData(refreshToken, responseData?.refreshToken ?: "")
+                        log("userId = $userIdValue")
 
-                        loginData.tryEmit(UiState.SUCCESS("Login Successful"))
+                        preferencesManager.saveData(userId, userIdValue)
+                        preferencesManager.saveData(accessToken, response.data?.accessToken ?: "")
+                        preferencesManager.saveData(refreshToken, response.data?.refreshToken ?: "")
+
+                        loginData.tryEmit(UiState.SUCCESS(response.data?.message ?: ""))
                     }
-                } catch (e: ApolloHttpException) {
-                    log("error in user login = ${e}")
-                    log("error in user login status code = ${e.statusCode}")
+                } catch (e: Exception) {
                     log("error in user login = ${e.message}")
 
                     loginData.tryEmit(UiState.ERROR(somethingWentWrongError(e)))
-                } catch (e: Exception) {
-                    log("exception catch = $e")
-                    loginData.tryEmit(UiState.ERROR(somethingWentWrongError(e)))
-
                 }
+
+
+                //for graphQL
+//                try {
+//                    val response = loginUserUseCase.execute(loginUserRequestModel)
+//                    log("login user response = ${response.data?.login ?: ""}")
+//                    if (response.message != null) {
+//                        log("error in login message = ${response.message}")
+//                        loginData.tryEmit(UiState.ERROR(response.message))
+//                    } else {
+//                        log("login success = ${response.data}")
+//
+//                        val responseData: LoginMutation.Login? = response.data?.login
+//
+//                        preferencesManager.saveData(accessToken, responseData?.accessToken ?: "")
+//                        preferencesManager.saveData(refreshToken, responseData?.refreshToken ?: "")
+//
+//                        loginData.tryEmit(UiState.SUCCESS("Login Successful"))
+//                    }
+//                } catch (e: ApolloHttpException) {
+//                    log("error in user login = ${e}")
+//                    log("error in user login status code = ${e.statusCode}")
+//                    log("error in user login = ${e.message}")
+//
+//                    loginData.tryEmit(UiState.ERROR(somethingWentWrongError(e)))
+//                } catch (e: Exception) {
+//                    log("exception catch = $e")
+//                    loginData.tryEmit(UiState.ERROR(somethingWentWrongError(e)))
+//
+//                }
             } else {
                 Log.i(myTag, "no internet")
                 loginData.tryEmit(UiState.ERROR(noInternetError))

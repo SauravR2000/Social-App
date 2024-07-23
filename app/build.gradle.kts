@@ -33,8 +33,8 @@ android {
 
         buildConfigField(
             "String",
-            "BASE_URL",
-            appProperties.getProperty("BASE_URL")?.trim().toString()
+            "BASE_URL_API",
+            appProperties.getProperty("BASE_URL_API")?.trim().toString()
         )
 
         buildConfigField(

@@ -10,12 +10,12 @@ import javax.inject.Inject
 class RegisterUserUseCase @Inject constructor(
     private val authRepository: AuthRepository
 ) {
-//    suspend fun execute(registerUserRequestModel: RegisterUserRequestModel): Resource<SuccessResponseModel> {
-//        return authRepository.registerUser(registerUserRequestModel)
-//    }
-
-
-    suspend fun execute(registerUserRequestModel: RegisterUserRequestModel): Resource<RegisterMutation.Data> {
+    suspend fun execute(registerUserRequestModel: RegisterUserRequestModel): Resource<SuccessResponseModel> {
         return authRepository.registerUser(registerUserRequestModel)
     }
+
+
+//    suspend fun execute(registerUserRequestModel: RegisterUserRequestModel): Resource<RegisterMutation.Data> {
+//        return authRepository.registerUser(registerUserRequestModel)
+//    }
 }
